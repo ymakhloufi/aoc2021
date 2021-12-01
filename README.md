@@ -1,2 +1,3 @@
-# aoc2021
-Advent Of Code
+# Advent Of Code 2021
+My Solutions (mostly hacky because lazy)
+
