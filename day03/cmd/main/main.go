@@ -32,6 +32,42 @@ func main() {
 	}
 	fmt.Printf("The lease common bits are %v, which is in decimals: %d\n", leastCommonBits, decimal)
 
+	oxigen, co2scrubber, err := filterByCommonality(bitStreams)
+	if err != nil {
+		fmt.Printf("failed to calculate life support metrics: %s\n", err.Error())
+	}
+	fmt.Printf("Commonality:\n%v\n%v\n", oxigen, co2scrubber)
+}
+
+func filterByCommonality(streams [][]bool) (oxigen [][]bool, co2Scrubber [][]bool, err error) {
+	remainingOxygenStreams := make([][]bool, len(streams))
+	copy(remainingOxygenStreams, streams)
+
+	remainingCo2ScrubberStreams := make([][]bool, len(streams))
+	copy(remainingCo2ScrubberStreams, streams)
+
+	streamLength := len(streams[0])
+	for i := 0; i < streamLength; i++ {
+		mostCommonBits, err := getMostCommonBits(remainingOxygenStreams)
+		fmt.Println(mostCommonBits)
+		if err != nil {
+			return nil, nil, fmt.Errorf("failed to determine most common bits for %v: %s", streams, err)
+		}
+
+		remainingOxygenStreams = filterByPositionValue(remainingOxygenStreams, i, mostCommonBits[i])
+		fmt.Println(remainingOxygenStreams)
+	}
+	return remainingOxygenStreams, remainingCo2ScrubberStreams, nil
+}
+
+func filterByPositionValue(streams [][]bool, pos int, value bool) [][]bool {
+	keptStreams := [][]bool{}
+	for _, stream := range streams {
+		if stream[pos] == value {
+			keptStreams = append(keptStreams, stream)
+		}
+	}
+	return keptStreams
 }
 
 func getMostCommonBits(streams [][]bool) ([]bool, error) {
