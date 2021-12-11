@@ -11,6 +11,7 @@ func main() {
 	numbers, err := readLines("assets/input")
 	if err != nil {
 		fmt.Printf("error reading file: %s", err.Error())
+		return
 	}
 
 	fmt.Printf(
